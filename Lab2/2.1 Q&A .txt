@@ -1,0 +1,87 @@
+Pitanja:
+1. Čemu služi naredba glutInit?
+2. Čemu služi naredba glutInitDisplayMode?
+3. Čemu služi naredba glutInitWindowSize?
+4. Čemu služi naredba glutInitWindowPosition?
+5. Čemu služi naredba glutCreateWindow?
+6. Čemu služi naredba glutDisplayFunc?
+7. Čemu služi naredba glutReshapeFunc?
+8. Čemu služi naredba glutMainLoop?
+9, Koja je struktura metode display, odnosno što se u njoj radi?
+10. Koja je struktura metode reshape, odnosno što se u njoj radi?
+11. Kako se u OpenGL-u crtaju točke, odnosno koji se idiom (slijed naredbi) za to koristi?
+12. Kako se u OpenGL-u crta obrub trokuta, odnosno koji se idiom (slijed naredbi) za to koristi?
+13. GLUT korisnicima omogućava pisanje programa koji reagira na različite događaje. Koji su događaji podržani?
+14. Na koji se način može specificirati dio koda koji je potrebno izvršiti kada korisnik pritisne tipku miša?
+15. Na koji se način može specificirati dio koda koji je potrebno izvršiti kada korisnik pritisne tipku na tipkovnici?
+
+Odgovori:
+1. glutInit inicjalizira GLUT library i dogovara sjedicu sa sustavom za upravalje prozorima, prijavljuje grešku ukoliko je spajanje sa sustavom za ipravljanje prozorima neuspješno i po potrebi procesira argumente komandne linije.
+2. glutInitDisplayMode postavlja početno stanje zaslona. Više različitih modova mogu se uključiti pomoću | (engl. pipe, binarnog "ili" operatora), a podžani su:  GLUT_RGBA, GLUT_RGB, GLUT_INDEX, GLUT_SINGLE, GLUT_DOUBLE, GLUT_ACCUM,GLUT_ALPHA,GLUT_DEPTH,GLUT_STENCIL,GLUT_MULTISAMPLE, GLUT_STEREO, GLUT_LUMINANCE. 
+3. glutInitWindowSize postavlja početnu veličinu zaslona. Parametri su visina i sirina prozora.
+4. glutInitWindowPosition psotavlja početnu poziciju zaslona na ekranu. Parametri s ux i y koordinata gornjeg ljevog ugla prozora.
+5. glutCreateWindow stvara vrhovni prozor na kojem se iscrtava scena. Naredba prima jedan argument, ime prozora. Trenutni prozor postavlja se na novostvoreni prozor. Naredba veaća ID prozora.
+6. glutDisplayFunc postavlja funkciju predanu kao argument kao callback funkciju. Ta funkcija poziva se kao odgovor na "uništavanje" scenem promjenu dimenzija prozora ili kad je scenu potrebno prikazati prvi put. 
+7. glutReshapeFunc registrira predanu funkciju ( opisana sa parametrima nove visine i sirine prozora) koja se poziva sa svakom promjenom prozora. 
+8. glutMainLoop petlja za obradu događaja. Poziva se najviše jednom i nema nikakvu povratnu vrijednost. 
+9. Metoda display sadrži niz naredbi potrebnih da se prikaže scena. Ona biva pokrenuta na zahtjev kad se scena treba ponovno iscrtati. Tu su pozivaju metode odabira boje, bojanja pozadine i crtanje oblika.
+	Isprobane naredbe pozvane iz display metode: glClearColor(r,g,b,alpha); glClear(GL_COLOR_BUFFER_BIT); glLoadIdentity(); glPointSize(size); glColor3f(r,g,b); glBegin(mode); glVertex2i(x,y); glEnd(); ...
+10. Metoda reshape sadrži niz naredbi koje bivaju izvršene svaki put kad se promjeni veličina prozora, ako je sama reshape metoda prikladno registrirana.
+	Isprobane naredbe pozvane iz reshape metode: glDisable(mode); glViewport(x,y,width,height); glMatrixMode(mode); glLoadIdenity(); glOrtho(left,right,bottom,top,near_val,val);
+11. Da bi nacrtali točku u OpenGl-u, najprije moramo pozvati naredbu glBegin sa parametrom GL_POINTS. Time mijenjamo stanje OpenGL za rad sa točkama. Svakim pozivom naredbe glVertex2i sa dva argumenta koji predstavljaju koordinate, bojamo jedan slikovni element na zaslonu. Ako želimo povećati veličinu točke (slikovnog elementa), koristimo se naredbom glPointSize(size), a boju mijenjamo pomocu glColor3f(r,g,b).
+12. Za iscrtavanje trokuta koristimo sličnu formulu kao i za crtanje točaka. Ovaj put naredbi glBegin kao argument predajemo GL_GL_LINE_STRIP. Ona nam omogućuje da svaku iduću specificiranu točku OpenGL interpretira kao brid i time gradi bridove trokuta.
+13. Događaji kojima korisnik može upravljati putem GLUT-ovog sučelja su: 
+	i) 		Potreba za iscrtavanjem scene
+	ii) 	Tipka je pritisnuta
+	iii) 	Tipka je otpuštena
+	iv) 	Posebna tipka je pritisnuta
+	v)	 	Posebna tipka je otpuštena
+	vi) 	Promjenjena je veličina prozora
+	vii)	Tipka miša je pritisnuta ili otpuštena
+	viii)	Korisnik je pomakao pokazivač miša
+14. Obrada prtiska tipke miša:
+		Općenito:
+			Korisnik mora registrirati funkciju prototipa:
+			void nazivMetode(int button, int state, int x, int y);
+			Registracija se provodi sa:
+			glutMouseFunc(metoda);
+			
+		U javi:
+			...
+			GLProfile glprofile= GLProfile.getDefault();
+			GLCapabilities glcapabilities=new GLCapabilities(glprofile);
+			final GLCanvas glcanvas= new GLCanvas(glcapabilities);
+			
+			glcanvas.addMouseListener( new MouseListener() {
+				...
+				@Override
+						public void mousePressed(java.awt.event.MouseEvent e) {
+							// Željeni kod
+						}
+				...
+			}
+			...
+15. Obrada prtiska tipke na tipkovnici:
+		Općenito:
+			Korisnik mora registrirati funkciju prototipa:
+			void nazivMetode(unsigned char key, int x, int y);
+			Registracija se provodi sa:
+			glutKeyboardFunc(metoda);
+			
+		U javi:
+			...
+			GLProfile glprofile= GLProfile.getDefault();
+			GLCapabilities glcapabilities=new GLCapabilities(glprofile);
+			final GLCanvas glcanvas= new GLCanvas(glcapabilities);
+			
+			glcanvas.addKeyListener( new KeyListener() {
+				...
+				@Override
+						public void keyPressed(KeyEvent e) {
+							// Željeni kod
+						}
+				...
+			}
+			...
+
+src1: https://www.opengl.org/resources/libraries/glut/spec3/spec3.html

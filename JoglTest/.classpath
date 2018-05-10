@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="D:/Programi/6.semestar/InterRacGrafika/Eclipse/JoglTest/lib/gluegen-rt.jar" sourcepath="D:/Programi/6.semestar/InterRacGrafika/Eclipse/JoglTest/lib/jogl-java-src.zip"/>
+	<classpathentry kind="lib" path="D:/Programi/6.semestar/InterRacGrafika/Eclipse/JoglTest/lib/gluegen-rt-natives-windows-amd64.jar" sourcepath="D:/Programi/6.semestar/InterRacGrafika/Eclipse/JoglTest/lib/gluegen-java-src.zip"/>
+	<classpathentry kind="lib" path="D:/Programi/6.semestar/InterRacGrafika/Eclipse/JoglTest/lib/jogl-all.jar" sourcepath="D:/Programi/6.semestar/InterRacGrafika/Eclipse/JoglTest/lib/jogl-java-src.zip"/>
+	<classpathentry kind="lib" path="D:/Programi/6.semestar/InterRacGrafika/Eclipse/JoglTest/lib/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

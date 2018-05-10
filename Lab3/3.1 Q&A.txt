@@ -1,0 +1,84 @@
+Pitanja:
+1. Proučite osnovnu verziju Bresenhamovog algoritma za crtanje linije.
+	(a) Taj algoritam će korektno iscrtati liniju samo u slučaju nagiba linije u rasponu
+		od 0(deg) do 45(deg). Objasnite zašto?
+		
+	(b) Što će taj algoritam nacrtati ako se zada crtanje pravca određenog početnom točkom 
+		(0,0) i završnom točkom (4,12)? Skicirajte rezultat. Objasnite zašto je rezultat takav.
+	
+	(c) Što bi taj algoritam nacrtao za pravac iz prethodne točke ako bismo redak 
+		u kojem se y-koordinata inkrementira zamijenili retkom u kojem se y-koordinata uvećava
+		za izračunati tanges kuta pod kojim je zadan pravac ? Skicirajte rezultat. Objasnite ga.
+	
+	(d) Vratimo se na osnovnu verziju algoritma gdje se y-koordinata uveća za 1. 
+		Što će taj algoritam nacrtati ako se zada pravac pod kuteom od -30(deg), 
+		a što ako se zada pravac čiji je tangens nagiba jednak -3? 
+		Skicirajte to na konkretnom primjeru i objasnite rezultat.
+
+2. Objasnite kako se izvodi Bresenhamov algoritam s decimalnim brojevima? 
+	Koja je osnovna prednost tog algoritma?
+	
+3. Objasnite na koji se način Bresenhmanov algoritam s decimalnim brojevima prevodi na 
+	cjelobrojnu varijantu? Je li ta inačica povoljnija u odnosu na inačicu s decimalnim brojem? 
+	Argumentirajte vaš odgovor.
+
+4. Objasnite kako radi algoritam za odsijecanje linija? 
+
+Odgovori:
+
+1. (a) Bresenhamov algoritam efikasan je algoritam za iscrtavanja pravaca na zaslonu. 
+	   	Standardni zapis pravca glasi y= a*x+ b. Kako bi za svaki korak od tocke xs do xe 
+	   	osvjetlili prikladni y vrijednosti algoritam računa vrijednost u y(n+1) na temelju vrijednosti
+	   	y(n). Modelu sa decimalnim brojevima ostvaren je pomocu dodatnih varijabli: trenutne pozicije na x osi
+	   	(svojevrsni brojač koliko elemenata moramo upaliti), diskretnu y vrijednost kojom palimo pojedini element 
+	   	zaslona, a varijablu koja nam predstavlja konstantni inkrement i yf, vrijednost kojom reguliramo 
+	   	kad ćemo mijenjati diskretnu y vrijednost. 
+	   	
+	   	Algoritam će prihvatljivo iscrtavati linije samo ako je fiksni broj koraka po x osi
+	   	veci ili jednak broju koraka koji moramo napraviti po y osi. Tada je informacija o nagibu
+	   	ostala ocuvana, a ta je situacija moguca jedino za kuteve od 0(deg) do 45(deg)
+	   	
+	(b) Za kuteve veće od 45(deg) algoritam bi se ponašao kad da je riječ upravo o nagibu u vrijednosti 1.
+		Kako neovisno o decimalnoj vrijednosti broja y uvijek inkrementiramo za 1 njezinu cjelobrojnu
+		reprezentaciju ona ce svakom iteracijom rasti. U ovom slucaju deximalna reprezentacija
+		broja y ne sluzi nicemu jer se u petlji koja sluzi za reguliranje te vrijednosti onda uporno
+		smanjuje za jedan te time u konacnici ne utjece na nekakvu restrikciju.
+		
+	(c) Ako želimo iscrtati liniju od točke (0,0) do (4,12) pravac izgleda ovako:
+		y-0=(12-0)/(4-0)*(x-0)-> y=3*x. 
+		Vidimo da za fiksan broj diskretnih koraka od x imamo samo pet vrijednosti [0..4].
+		Trenutni algoritam oznacio bi piksele (0,0),(1,3),(2,6),(3,9),(4,12). Dakako, taj set tocaka 
+		nije povezan jer algoritma nema mehanizam interpolacije po vise koraka duz ordinate. 
+		Također, kad bi samo izmjenili rast vrijednosti diskretne točke za koeficijent nagiba, provjera
+		decimalne vrijednosti y izgubila bi smisao ukoliko bi nastavili od nje oduzimati broj 1.
+		
+	(d) Za sve negativne kuteve dogadja se isti scenarij. Algoritam se inicjalizira sa negativnom vrijednoscu
+		od decimalne reprezentacije koordinate y i oslanja se da ce ona rasti kroz iteracije petlje.
+		No kako se u svakom prolazu dodaje negativan broj, ova petlja ce konstantno paliti elemente zaslona
+		na pozicijama (x,0) x e [xs, xe]. 
+		
+2. Potpuni izvod Bresenhamovog algoritma zasniva se na iterativnom inkrementiaranju vrijednosti y koordinate
+	pravca iznosom nagiba, prebrojan u diskretnim koracima prateci vrijednosti vrijednosti x.
+	Kako bi osigurali da se donošenje odluke o inkrementiranju izvede što jendostavnije, koristi se provjera
+	do sad akumuliranog uspona. Taj broj ujedno predstavlja gresku odstupanja diskretnih vrijednosti od 
+	matematicki ispravne formule. Inicjalno je postavljen na -0.5 a svaki put kad premaši nulu, trenutnoj
+	vrijednosti biva oduzeta jedinica kako bi se ponovno efikasno mogao pratiti broj napravljeni koraka.
+	
+	Osnovna prednost tog algoritma je izbacivanje operacije mnozenja i funkcije zaokruzivanja.
+
+3. Primarna motivacija za daljnje poboljsavanje Bresenhmanovog algoritma je uklananje 
+	skupih operacija sa decimalnim brojevima. Koeficijent nagiba a= deltaY/deltaX mnozimo sa nazivnikom
+	razlomka sa desne strane te izvršimo niz supstitucija i sređivanja kako bi prilagodili koeficijent,
+	početne uvjete i korekciju greske.
+	Ta je inacica puno povoljnija jer se sastoji samo od operacija zbrajanja, oduzimanja i mnozenja sa 
+	brojem 2 sto se moze realizirati kao posmak u lijevo.
+	
+4. Algoritma za odsjecanje linija razmatram u ovom zadatku zove se algoritam Cohen Sutherland i djeluje pod
+	pretpostavkom da je prostor unutar kojeg cemo crtati pravokutnik. U skladu s ogranicenjem prostor mozemo podjeliti na 
+	9 dijelova. Oni su definiratni minilanim i maksimalnim vrijednostima koordinata. Oznaku u 2D prostoru cine 4, a u 3D prostoru 
+	6 bitova. Vrijednost bita je 1 ako koordinata u vrijednosti premasuje zadano ogranicenje. Tako su za 2D prostor redom:
+	1. bit: je li y veci od vise granice, 2. bit: y manji od nize granice, 3. bit: x veci od vise granice, 4. bit: x manji od nize granice. 
+	Takav se vektor bitova dodjeljuje svakoj tocki nakon cega sljedi njihova analiza. Prvo se provjerava 
+	prolazi li uopce opisani pravac kroz vidljivo podrucje. Ako to nije slucaj, operacija c1 AND c2
+	rezultira sa brojem razlicitim od 0000 i duina nije vidljiva. U suprotnom moramo traziti presjecista
+	sa granicama na koje pokazuju zastavice. 
