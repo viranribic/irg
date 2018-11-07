@@ -3,4 +3,3 @@ Repository for "Interactive computer graphics" course assignments of the academi
 
 Course web-page: [link](https://www.fer.unizg.hr/en/course/icg)
 
-Each assignment has it's own folder with further remarks.
